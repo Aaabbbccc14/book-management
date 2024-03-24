@@ -1,12 +1,12 @@
 package com.example.book.management.controller;
 
 import com.example.book.management.dto.BookRequest;
+import com.example.book.management.dto.BookResponse;
 import com.example.book.management.service.BookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,5 +17,13 @@ public class BookController {
     @PostMapping("/add")
     public void add(@RequestBody BookRequest request){
         bookService.add(request);
+    }
+    @GetMapping("/all")
+    public List<BookResponse> all(){
+        return bookService.all();
+    }
+    @GetMapping("/{bookId}")
+    public BookResponse byId(@PathVariable Long bookId){
+        return bookService.getById(bookId);
     }
 }

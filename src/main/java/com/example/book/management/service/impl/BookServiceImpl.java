@@ -1,9 +1,11 @@
 package com.example.book.management.service.impl;
 
 import com.example.book.management.dto.BookRequest;
+import com.example.book.management.dto.BookResponse;
 import com.example.book.management.entity.Author;
 import com.example.book.management.entity.Book;
 import com.example.book.management.entity.Publisher;
+import com.example.book.management.mapper.BookMapper;
 import com.example.book.management.repository.AuthorRepository;
 import com.example.book.management.repository.BookRepository;
 import com.example.book.management.repository.PublisherRepository;
@@ -22,6 +24,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final PublisherRepository publisherRepository;
+    private final BookMapper bookMapper;
     @Override
     public void add(BookRequest request) {
         Book book = new Book();
@@ -32,6 +35,17 @@ public class BookServiceImpl implements BookService {
         book.setAddedTime(LocalDateTime.now());
         bookRepository.save(book);
 
+    }
+
+    @Override
+    public List<BookResponse> all() {
+        return bookMapper.toDtoS(bookRepository.findAll());
+    }
+
+    @Override
+    public BookResponse getById(Long bookId) {
+        Optional<Book> book = bookRepository.findById(bookId);
+        return book.map(bookMapper::toDto).orElse(null);
     }
 
     private Publisher getPublisher(String publisherEmail, Book book) {
