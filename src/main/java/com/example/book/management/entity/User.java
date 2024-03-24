@@ -16,6 +16,8 @@ public class User {
     private Long id;
 
     private String email;
+    private String firstname;
+    private String lastname;
     @ManyToMany
     private List<Book> books;
 }

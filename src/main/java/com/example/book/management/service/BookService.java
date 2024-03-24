@@ -11,4 +11,6 @@ public interface BookService {
     List<BookResponse> all();
 
     BookResponse getById(Long bookId);
+
+    List<BookResponse> getPublisherBooks(String publisherId);
 }

@@ -5,12 +5,14 @@ import com.example.book.management.dto.BookResponse;
 import com.example.book.management.entity.Author;
 import com.example.book.management.entity.Book;
 import com.example.book.management.entity.Publisher;
+import com.example.book.management.exception.NotFoundException;
 import com.example.book.management.mapper.BookMapper;
 import com.example.book.management.repository.AuthorRepository;
 import com.example.book.management.repository.BookRepository;
 import com.example.book.management.repository.PublisherRepository;
 import com.example.book.management.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -46,6 +48,14 @@ public class BookServiceImpl implements BookService {
     public BookResponse getById(Long bookId) {
         Optional<Book> book = bookRepository.findById(bookId);
         return book.map(bookMapper::toDto).orElse(null);
+    }
+
+    @Override
+    public List<BookResponse> getPublisherBooks(String publisherEmail) {
+        Optional<Publisher> publisher = publisherRepository.findByEmail(publisherEmail);
+        if (publisher.isEmpty())
+            throw new NotFoundException("not found publisher wit email: "+ publisherEmail, HttpStatus.NOT_FOUND);
+        return bookMapper.toDtoS(publisher.get().getBooks());
     }
 
     private Publisher getPublisher(String publisherEmail, Book book) {
