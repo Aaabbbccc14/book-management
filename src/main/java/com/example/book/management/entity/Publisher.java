@@ -3,6 +3,7 @@ package com.example.book.management.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -18,5 +19,5 @@ public class Publisher {
     private String email;
 
     @OneToMany(mappedBy = "publisher")
-    private Set<Book> books;
+    private List<Book> books;
 }
