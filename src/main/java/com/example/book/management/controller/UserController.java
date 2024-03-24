@@ -27,4 +27,5 @@ public class UserController {
     public UserResponse byEmail(@RequestParam String userEmail){
         return userService.byEmail(userEmail);
     }
+
 }

@@ -5,11 +5,13 @@ import com.example.book.management.dto.BookResponse;
 import com.example.book.management.entity.Author;
 import com.example.book.management.entity.Book;
 import com.example.book.management.entity.Publisher;
+import com.example.book.management.entity.User;
 import com.example.book.management.exception.NotFoundException;
 import com.example.book.management.mapper.BookMapper;
 import com.example.book.management.repository.AuthorRepository;
 import com.example.book.management.repository.BookRepository;
 import com.example.book.management.repository.PublisherRepository;
+import com.example.book.management.repository.UserRepository;
 import com.example.book.management.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,7 @@ public class BookServiceImpl implements BookService {
     private final AuthorRepository authorRepository;
     private final PublisherRepository publisherRepository;
     private final BookMapper bookMapper;
+    private final UserRepository userRepository;
     @Override
     public void add(BookRequest request) {
         Book book = new Book();
@@ -56,6 +59,31 @@ public class BookServiceImpl implements BookService {
         if (publisher.isEmpty())
             throw new NotFoundException("not found publisher wit email: "+ publisherEmail, HttpStatus.NOT_FOUND);
         return bookMapper.toDtoS(publisher.get().getBooks());
+    }
+
+    @Override
+    public void addToUser(String email, Long bookId) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty())
+            throw new NotFoundException("not found user wit email: "+ email, HttpStatus.NOT_FOUND);
+        Optional<Book> book = bookRepository.findById(bookId);
+        if (book.isEmpty())
+            throw new NotFoundException("not found book wit id: "+ bookId, HttpStatus.NOT_FOUND);
+        List<Book> userBooks = user.get().getBooks();
+        userBooks.add(book.get());
+        user.get().setBooks(userBooks);
+        userRepository.save(user.get());
+
+
+    }
+
+    @Override
+    public List<BookResponse> getUserBooks(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty())
+            throw new NotFoundException("not found user wit email: "+ email, HttpStatus.NOT_FOUND);
+
+        return bookMapper.toDtoS(user.get().getBooks());
     }
 
     private Publisher getPublisher(String publisherEmail, Book book) {

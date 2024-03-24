@@ -13,4 +13,8 @@ public interface BookService {
     BookResponse getById(Long bookId);
 
     List<BookResponse> getPublisherBooks(String publisherId);
+
+    void addToUser(String email, Long bookId);
+
+    List<BookResponse> getUserBooks(String email);
 }

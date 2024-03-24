@@ -26,4 +26,13 @@ public class BookController {
     public BookResponse byId(@PathVariable Long bookId){
         return bookService.getById(bookId);
     }
+
+    @PostMapping("/user/add/{bookId}")
+    public void addToUser(@RequestParam String userEmail, @PathVariable Long bookId){
+        bookService.addToUser(userEmail, bookId);
+    }
+    @GetMapping("/user/all")
+    public List<BookResponse> userBooks(@RequestParam String userEmail){
+        return bookService.getUserBooks(userEmail);
+    }
 }
