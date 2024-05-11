@@ -1,5 +1,7 @@
 package com.example.book.management.controller;
 
+import com.example.book.management.dto.LoginRequest;
+import com.example.book.management.dto.LoginResponse;
 import com.example.book.management.dto.UserRequest;
 import com.example.book.management.dto.UserResponse;
 import com.example.book.management.service.UserService;
@@ -14,6 +16,22 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+
+    @PostMapping("/register")
+    public void register(@RequestBody UserRequest request){
+        userService.register(request);
+    }
+
+    @GetMapping("/confirm")
+    public String confirm(@RequestParam String confirmCode){
+        return userService.confirm(confirmCode);
+    }
+
+
+    @PostMapping("/login")
+    public LoginResponse login(@RequestBody LoginRequest request){
+        return userService.login(request);
+    }
 
     @PostMapping("/add")
     public void add(@RequestBody UserRequest request){
